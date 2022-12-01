@@ -1,3 +1,4 @@
+import banner from "../../images/banner.png";
 import { Singleton } from "../Global";
 import { getScienceFromWorkers } from "../logic/BuildingLogic";
 import { Config } from "../logic/Constants";
@@ -32,6 +33,8 @@ export function HeadquarterBuildingBody({ gameState, xy }: IBuildingComponentPro
    const techAge = getCurrentTechAge(config);
    return (
       <div className="window-body">
+         <img style={{ width: "100%" }} src={banner} />
+         <div className="sep10"></div>
          <BuildingProduceComponent gameState={gameState} xy={xy} />
          <fieldset>
             <legend>Census</legend>
