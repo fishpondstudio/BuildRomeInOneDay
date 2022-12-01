@@ -41,7 +41,7 @@ const ui = document.getElementById("game-ui");
 
 ReactDOM.render(
    <React.StrictMode>
-      <HistoryRouter history={getRouter()}>
+      <HistoryRouter history={getRouter() as any}>
          <Routes>
             <Route index={true} element={<LoadingPage />} />
             <Route path="/tile/:xy" element={<TilePage />} />

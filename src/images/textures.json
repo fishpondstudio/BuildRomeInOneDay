@@ -50,7 +50,7 @@
         },
         "BuildingBorobudur": {
             "frame": {
-                "x": 2373,
+                "x": 2384,
                 "y": 1931,
                 "w": 100,
                 "h": 55
@@ -58,7 +58,7 @@
         },
         "BuildingBranCastle": {
             "frame": {
-                "x": 3250,
+                "x": 3351,
                 "y": 1744,
                 "w": 100,
                 "h": 97
@@ -82,8 +82,8 @@
         },
         "BuildingChichenItza": {
             "frame": {
-                "x": 4331,
-                "y": 1744,
+                "x": 2182,
+                "y": 1931,
                 "w": 100,
                 "h": 65
             }
@@ -106,7 +106,7 @@
         },
         "BuildingColosseum": {
             "frame": {
-                "x": 4129,
+                "x": 4230,
                 "y": 1744,
                 "w": 100,
                 "h": 75
@@ -122,7 +122,7 @@
         },
         "BuildingCopperMiningCamp": {
             "frame": {
-                "x": 3755,
+                "x": 3856,
                 "y": 1744,
                 "w": 90,
                 "h": 89
@@ -146,8 +146,8 @@
         },
         "BuildingFarmland": {
             "frame": {
-                "x": 2182,
-                "y": 1931,
+                "x": 1618,
+                "y": 2032,
                 "w": 89,
                 "h": 72
             }
@@ -162,7 +162,7 @@
         },
         "BuildingGreatDagonPagoda": {
             "frame": {
-                "x": 3351,
+                "x": 3452,
                 "y": 1744,
                 "w": 100,
                 "h": 96
@@ -202,7 +202,7 @@
         },
         "BuildingHatshepsutTemple": {
             "frame": {
-                "x": 4230,
+                "x": 4331,
                 "y": 1744,
                 "w": 100,
                 "h": 70
@@ -226,7 +226,7 @@
         },
         "BuildingHimejiCastle": {
             "frame": {
-                "x": 3452,
+                "x": 3553,
                 "y": 1744,
                 "w": 100,
                 "h": 96
@@ -256,9 +256,17 @@
                 "h": 90
             }
         },
+        "BuildingIronForge": {
+            "frame": {
+                "x": 3250,
+                "y": 1744,
+                "w": 100,
+                "h": 98
+            }
+        },
         "BuildingIronMiningCamp": {
             "frame": {
-                "x": 3846,
+                "x": 3947,
                 "y": 1744,
                 "w": 90,
                 "h": 89
@@ -330,7 +338,7 @@
         },
         "BuildingMiningCamp": {
             "frame": {
-                "x": 3654,
+                "x": 3755,
                 "y": 1744,
                 "w": 100,
                 "h": 94
@@ -386,7 +394,7 @@
         },
         "BuildingPetra": {
             "frame": {
-                "x": 4028,
+                "x": 4129,
                 "y": 1744,
                 "w": 100,
                 "h": 77
@@ -434,7 +442,7 @@
         },
         "BuildingStonehenge": {
             "frame": {
-                "x": 2272,
+                "x": 2283,
                 "y": 1931,
                 "w": 100,
                 "h": 60
@@ -450,7 +458,7 @@
         },
         "BuildingStoneQuarry": {
             "frame": {
-                "x": 3937,
+                "x": 4038,
                 "y": 1744,
                 "w": 90,
                 "h": 89
@@ -466,7 +474,7 @@
         },
         "BuildingTempleOfHeaven": {
             "frame": {
-                "x": 3553,
+                "x": 3654,
                 "y": 1744,
                 "w": 100,
                 "h": 95
@@ -1096,7 +1104,7 @@
                 "h": 100
             }
         },
-        "Transport": {
+        "transport": {
             "frame": {
                 "x": 4372,
                 "y": 1562,
