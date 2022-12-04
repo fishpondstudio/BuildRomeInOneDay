@@ -1,6 +1,5 @@
 import { defineConfig } from "vite";
 import Spritesmith from "vite-plugin-spritesmith";
-import { viteStaticCopy } from "vite-plugin-static-copy";
 import { swcReactRefresh } from "vite-plugin-swc-react-refresh";
 
 // https://vitejs.dev/config/
@@ -21,9 +20,6 @@ export default defineConfig(({ command }) => {
             spritesmithOptions: {
                padding: 1,
             },
-         }),
-         viteStaticCopy({
-            targets: [{ src: "src/fonts/*.png", dest: "assets" }],
          }),
       ],
       server: {
