@@ -1,6 +1,6 @@
 import classNames from "classnames";
 import { PropsWithChildren, useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useRoute } from "wouter";
 import { getGameOptions, getGameState, Singleton, syncUITheme } from "../Global";
 import { RomeProvinceScene } from "../scenes/RomeProvinceScene";
 import { RomeHistoryScene } from "../scenes/TechTreeScene";
@@ -45,6 +45,7 @@ function MenuItem({ visible, children }: PropsWithChildren<{ visible: boolean }>
 export function MenuComponent() {
    const [active, setActive] = useState<MenuItemOptions>(null);
    const buttonRef = useRef(null);
+   const [match, params] = useRoute("/tile/:xy");
 
    useEffect(() => {
       function onPointerDown(e: PointerEvent) {
@@ -55,8 +56,6 @@ export function MenuComponent() {
          window.removeEventListener("pointerdown", onPointerDown);
       };
    }, []);
-
-   const params = useParams();
 
    return (
       <>
@@ -170,7 +169,7 @@ export function MenuComponent() {
                   if (import.meta.env.PROD) {
                      return;
                   }
-                  if (params.xy) {
+                  if (match && params.xy) {
                      console.log(getGameState().tiles[params.xy]);
                   }
                }}

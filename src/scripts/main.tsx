@@ -2,9 +2,8 @@ import { Assets } from "@pixi/assets";
 import { update } from "@tweenjs/tween.js";
 import * as debug_PIXI from "pixi.js";
 import { Application, Spritesheet } from "pixi.js";
-import React from "react";
 import ReactDOM from "react-dom";
-import { Route, Routes, unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
+import { Route, Switch } from "wouter";
 import altasDef from "../images/textures.json";
 import atlas from "../images/textures.png";
 import { BG_COLOR } from "./Colors";
@@ -13,7 +12,6 @@ import { fontBundle } from "./generated/FontBundle";
 import {
    GameStateChanged,
    getGameState,
-   getRouter,
    initializeSavedGame,
    initializeSingletons,
    ISingleton,
@@ -40,17 +38,13 @@ import { SceneManager, Textures } from "./utilities/SceneManager";
 const ui = document.getElementById("game-ui");
 
 ReactDOM.render(
-   <React.StrictMode>
-      <HistoryRouter history={getRouter() as any}>
-         <Routes>
-            <Route index={true} element={<LoadingPage />} />
-            <Route path="/tile/:xy" element={<TilePage />} />
-            <Route path="/tech/:id" element={<TechPage />} />
-            <Route path="/rome-history/:id" element={<RomeHistoryPage />} />
-            <Route path="/rome-province/:id" element={<RomeProvincePage />} />
-         </Routes>
-      </HistoryRouter>
-   </React.StrictMode>,
+   <Switch>
+      <Route path="/tile/:xy" component={TilePage} />
+      <Route path="/tech/:id" component={TechPage} />
+      <Route path="/rome-history/:id" component={RomeHistoryPage} />
+      <Route path="/rome-province/:id" component={RomeProvincePage} />
+      <Route component={LoadingPage} />
+   </Switch>,
    ui
 );
 

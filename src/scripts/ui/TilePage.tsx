@@ -1,4 +1,3 @@
-import { useParams } from "react-router-dom";
 import { isSingletonReady, useGameState } from "../Global";
 import { BuildingPage } from "./BuildingPage";
 import { ConstructionPage } from "./ConstructionPage";
@@ -8,10 +7,9 @@ import "./UIExtension.css";
 import { UnexploredTile } from "./UnexploredTile";
 import { UpgradingPage } from "./UpgradingPage";
 
-export function TilePage() {
-   const params = useParams();
+export function TilePage({ params }: { params: { xy: string } }) {
+   const { xy } = params;
    const gameState = useGameState();
-   const xy = params.xy;
    if (!xy || !isSingletonReady()) {
       return null;
    }

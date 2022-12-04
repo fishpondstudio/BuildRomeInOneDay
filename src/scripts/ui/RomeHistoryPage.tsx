@@ -1,4 +1,3 @@
-import { useParams } from "react-router-dom";
 import { RomeHistory, RomeHistoryUnlockDefinitions } from "../definitions/RomeHistoryDefinitions";
 import { Singleton, useGameState } from "../Global";
 import { Config } from "../logic/Constants";
@@ -10,9 +9,8 @@ import { MenuComponent } from "./MenuComponent";
 import { TechPrerequisiteItemComponent, TechResearchProgressComponent } from "./TechComponent";
 import { UnlockableEffectComponent } from "./UnlockableEffectComponent";
 
-export function RomeHistoryPage() {
-   const params = useParams();
-   const tech = params.id as RomeHistory;
+export function RomeHistoryPage({ params }: { params: { id: RomeHistory } }) {
+   const tech = params.id;
    const def = Config.RomeHistory[tech];
    const gs = useGameState();
    const config = getRomeHistoryConfig(gs);

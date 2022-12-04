@@ -1,4 +1,3 @@
-import { createBrowserHistory } from "history";
 import { useEffect, useState } from "react";
 import { Config } from "./logic/Constants";
 import { GameOptions, GameState, SavedGame } from "./logic/GameState";
@@ -40,9 +39,8 @@ export function Singleton(): ISingleton {
    return singletons;
 }
 
-const router = createBrowserHistory({ window });
-export function getRouter() {
-   return router;
+export function routeTo(url: string) {
+   return history.pushState(null, "", url);
 }
 
 const savedGame = new SavedGame();

@@ -1,4 +1,3 @@
-import { useParams } from "react-router-dom";
 import { RomeProvince } from "../definitions/RomeProvinceDefinitions";
 import { Singleton, useGameState } from "../Global";
 import { Config } from "../logic/Constants";
@@ -8,9 +7,8 @@ import { MenuComponent } from "./MenuComponent";
 import { TechResearchProgressComponent } from "./TechComponent";
 import { UnlockableEffectComponent } from "./UnlockableEffectComponent";
 
-export function RomeProvincePage() {
-   const params = useParams();
-   const id = params.id as RomeProvince;
+export function RomeProvincePage({ params }: { params: { id: RomeProvince } }) {
+   const id = params.id;
    const def = Config.RomeProvince[id];
    const name = def.name();
    const gs = useGameState();

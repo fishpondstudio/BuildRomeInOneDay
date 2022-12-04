@@ -1,7 +1,7 @@
 import { SmoothGraphics } from "@pixi/graphics-smooth";
 import { Viewport } from "pixi-viewport";
 import { IPointData, LINE_CAP, LINE_JOIN, Sprite, Texture, TilingSprite, utils } from "pixi.js";
-import { getRouter, Singleton } from "../Global";
+import { routeTo, Singleton } from "../Global";
 import { GameState } from "../logic/GameState";
 import { forEach, lookAt, pointToXy, xyToPoint } from "../utilities/Helper";
 import { ObjectPool } from "../utilities/ObjectPool";
@@ -129,7 +129,7 @@ export class WorldScene extends Scene {
          alignment: 0.5,
       });
       Singleton().grid.drawSelected(grid, this._selectedGraphics);
-      getRouter().push(`/tile/${key}`);
+      routeTo(`/tile/${key}`);
    }
 
    getTileVisual(xy: string): TileVisual | undefined {

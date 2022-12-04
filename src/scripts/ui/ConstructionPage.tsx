@@ -1,4 +1,4 @@
-import { getRouter, notifyGameStateUpdate, Singleton, useGameState } from "../Global";
+import { notifyGameStateUpdate, routeTo, Singleton, useGameState } from "../Global";
 import { Tick } from "../logic/TickLogic";
 import { ITileData } from "../logic/Tile";
 import { WorldScene } from "../scenes/WorldScene";
@@ -9,7 +9,7 @@ import { MenuComponent } from "./MenuComponent";
 
 export function ConstructionPage({ tile }: { tile: ITileData }): JSX.Element | null {
    if (tile.building == null) {
-      getRouter().replace("/");
+      routeTo("/");
       return null;
    }
    const building = tile.building;

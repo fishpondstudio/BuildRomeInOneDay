@@ -1,4 +1,3 @@
-import { useParams } from "react-router-dom";
 import { Tech, TechUnlockDefinitions } from "../definitions/TechDefinitions";
 import { Singleton, useGameState } from "../Global";
 import { Config } from "../logic/Constants";
@@ -9,9 +8,8 @@ import { MenuComponent } from "./MenuComponent";
 import { TechPrerequisiteItemComponent, TechResearchProgressComponent } from "./TechComponent";
 import { UnlockableEffectComponent } from "./UnlockableEffectComponent";
 
-export function TechPage() {
-   const params = useParams();
-   const id = params.id as Tech;
+export function TechPage({ params }: { params: { id: Tech } }) {
+   const id = params.id;
    const tech = Config.Tech[id];
    const gs = useGameState();
    const config = getTechConfig(gs);
