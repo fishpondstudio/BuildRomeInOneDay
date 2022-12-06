@@ -73,7 +73,7 @@ export class RomeProvinceScene extends Scene {
       ProvinceVisual.i = 0;
       forEach(Config.RomeProvince, (name) => {
          const province = new ProvinceVisual(name, textures[`Rome${name}`], app.renderer.plugins);
-         if (gameState.annexedProvince[name]) {
+         if (gameState.unlocked[name]) {
             province.annex();
          }
          this._provinces.push(province);

@@ -3,11 +3,7 @@ import { Building } from "./BuildingDefinitions";
 import { Deposit } from "./ResourceDefinitions";
 import { PartialSet } from "./TypeDefinitions";
 
-export interface ITechDefinition extends IUnlockable {
-   column: number;
-}
-
-export interface IUnlockable {
+export interface IUnlockableDefinition {
    name: () => string;
    unlockBuilding?: Building[];
    revealDeposit?: Deposit[];
@@ -17,22 +13,24 @@ export interface IUnlockable {
    additionalUpgrades?: Array<() => string>;
 }
 
-export interface ITechAge {
+export interface ITechDefinition extends IUnlockableDefinition {
+   column: number;
+}
+
+export interface ITechAgeDefinition {
    from: number;
    to: number;
    name: () => string;
 }
 
 export interface IUnlockableConfig<T extends string> {
-   definitions: Record<T, IUnlockable>;
+   definitions: Record<T, IUnlockableDefinition>;
    unlocked: PartialSet<T>;
+   verb: () => string;
 }
 
-export interface ITechConfig<T extends string> extends IUnlockableConfig<T> {
-   definitions: Record<T, ITechDefinition>;
-   unlockDefinitions: Record<T, Readonly<T[]>>;
-}
-
-export interface ITechConfigWithAge<T extends string, K extends string> extends ITechConfig<T> {
-   ageDefinitions: Record<K, ITechAge>;
+export interface ITechTree {
+   definitions: Record<string, ITechDefinition>;
+   prerequisites: Record<string, Readonly<string[]>>;
+   ages: Record<string, ITechAgeDefinition>;
 }

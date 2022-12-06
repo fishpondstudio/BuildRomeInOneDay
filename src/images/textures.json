@@ -208,7 +208,7 @@
                 "h": 70
             }
         },
-        "BuildingHeadquarter_": {
+        "BuildingHeadquarter": {
             "frame": {
                 "x": 3723,
                 "y": 1040,
@@ -216,7 +216,7 @@
                 "h": 90
             }
         },
-        "BuildingHeadquarter": {
+        "BuildingHeadquarterRome": {
             "frame": {
                 "x": 3766,
                 "y": 1562,

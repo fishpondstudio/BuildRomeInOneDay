@@ -1,12 +1,26 @@
-import { IBuildingDefinition } from "../definitions/BuildingDefinitions";
+import { Building, IBuildingDefinition } from "../definitions/BuildingDefinitions";
+import { City } from "../definitions/CityDefinitions";
 import { IResourceDefinition, Resource } from "../definitions/ResourceDefinitions";
 import { PartialTabulate } from "../definitions/TypeDefinitions";
 import { Singleton } from "../Global";
 import { forEach, isEmpty, keysOf, reduceOf, safeAdd, safePush, sum } from "../utilities/Helper";
+import { Textures } from "../utilities/SceneManager";
 import { Config } from "./Constants";
 import { GameState } from "./GameState";
 import { Multiplier, MultiplierWithSource, Tick } from "./TickLogic";
 import { IBuildingData, IHaveTypeAndLevel } from "./Tile";
+
+export function getBuildingTexture(b: Building, textures: Textures, city: City) {
+   const override = Config.City[city].buildingTexture[b];
+   if (override) {
+      return textures[override];
+   }
+   return textures[`Building${b}`];
+}
+
+export function getTileTexture(r: Resource, textures: Textures) {
+   return textures[`Tile${r}`];
+}
 
 export function totalMultiplierFor(xy: string, type: keyof Multiplier, gs: GameState): number {
    return 1 + sumMultipliers(getMultipliersFor(xy, gs), type);

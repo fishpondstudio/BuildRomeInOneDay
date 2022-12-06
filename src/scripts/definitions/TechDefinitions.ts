@@ -1,17 +1,17 @@
 import { L, t } from "../utilities/i18n";
-import { ITechAge, ITechDefinition } from "./ITechDefinition";
+import { ITechAgeDefinition, ITechDefinition } from "./ITechDefinition";
 
 export class TechAgeDefinitions {
-   StoneAge: ITechAge = { from: 0, to: 1, name: () => t(L.StoneAge) };
-   BronzeAge: ITechAge = { from: 2, to: 3, name: () => t(L.BronzeAge) };
-   IronAge: ITechAge = { from: 4, to: 5, name: () => t(L.IronAge) };
-   ClassicalAge: ITechAge = { from: 6, to: 8, name: () => t(L.ClassicalAge) };
-   MiddleAge: ITechAge = { from: 9, to: 10, name: () => t(L.MiddleAge) };
-   RenaissanceAge: ITechAge = { from: 11, to: 13, name: () => t(L.RenaissanceAge) };
-   IndustrialAge: ITechAge = { from: 14, to: 17, name: () => t(L.IndustrialAge) };
-   WorldWarAge: ITechAge = { from: 18, to: 20, name: () => t(L.WorldWarAge) };
-   ColdWarAge: ITechAge = { from: 21, to: 22, name: () => t(L.ColdWarAge) };
-   InformationAge: ITechAge = { from: 23, to: 25, name: () => t(L.InformationAge) };
+   StoneAge: ITechAgeDefinition = { from: 0, to: 1, name: () => t(L.StoneAge) };
+   BronzeAge: ITechAgeDefinition = { from: 2, to: 3, name: () => t(L.BronzeAge) };
+   IronAge: ITechAgeDefinition = { from: 4, to: 5, name: () => t(L.IronAge) };
+   ClassicalAge: ITechAgeDefinition = { from: 6, to: 8, name: () => t(L.ClassicalAge) };
+   MiddleAge: ITechAgeDefinition = { from: 9, to: 10, name: () => t(L.MiddleAge) };
+   RenaissanceAge: ITechAgeDefinition = { from: 11, to: 13, name: () => t(L.RenaissanceAge) };
+   IndustrialAge: ITechAgeDefinition = { from: 14, to: 17, name: () => t(L.IndustrialAge) };
+   WorldWarAge: ITechAgeDefinition = { from: 18, to: 20, name: () => t(L.WorldWarAge) };
+   ColdWarAge: ITechAgeDefinition = { from: 21, to: 22, name: () => t(L.ColdWarAge) };
+   InformationAge: ITechAgeDefinition = { from: 23, to: 25, name: () => t(L.InformationAge) };
 }
 
 export type TechAge = keyof TechAgeDefinitions;

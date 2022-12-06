@@ -1,4 +1,4 @@
-import { IUnlockable } from "../definitions/ITechDefinition";
+import { IUnlockableDefinition } from "../definitions/ITechDefinition";
 import { getBuildingCost } from "../logic/BuildingLogic";
 import { Config } from "../logic/Constants";
 import { GameState } from "../logic/GameState";
@@ -11,7 +11,7 @@ export function UnlockableEffectComponent({
    definition,
    gameState,
 }: {
-   definition: IUnlockable;
+   definition: IUnlockableDefinition;
    gameState: GameState;
 }) {
    return (

@@ -1,7 +1,7 @@
 import { Tech, TechUnlockDefinitions } from "../definitions/TechDefinitions";
 import { Singleton, useGameState } from "../Global";
 import { Config } from "../logic/Constants";
-import { getAgeForTech, getTechConfig, getUnlockCost, unlockTech } from "../logic/TechLogic";
+import { getAgeForTech, getTechTree, getUnlockCost, unlockTech } from "../logic/TechLogic";
 import { TechTreeScene } from "../scenes/TechTreeScene";
 import { L, t } from "../utilities/i18n";
 import { MenuComponent } from "./MenuComponent";
@@ -12,9 +12,9 @@ export function TechPage({ params }: { params: { id: Tech } }) {
    const id = params.id;
    const tech = Config.Tech[id];
    const gs = useGameState();
-   const config = getTechConfig(gs);
+   const config = getTechTree(gs);
    const prerequisites = TechUnlockDefinitions[id];
-   const prerequisitesSatisfied = prerequisites.every((t) => gs.unlockedTech[t]);
+   const prerequisitesSatisfied = prerequisites.every((t) => gs.unlocked[t]);
    return (
       <div className="window">
          <div className="title-bar">
@@ -27,12 +27,12 @@ export function TechPage({ params }: { params: { id: Tech } }) {
             <fieldset>
                <legend>{t(L.TechnologyPrerequisite)}</legend>
                {prerequisites.map((prerequisite) => {
-                  const techAge = getAgeForTech(prerequisite, config);
-                  const techAgeLabel = techAge ? `(${Config.TechAge[techAge].name()})` : "";
+                  const techAge = getAgeForTech(prerequisite, gs);
+                  const techAgeLabel = techAge ? `(${config.ages[techAge].name()})` : "";
                   return (
                      <TechPrerequisiteItemComponent
                         name={`${config.definitions[prerequisite].name()} ${techAgeLabel}`}
-                        unlocked={!!config.unlocked[prerequisite]}
+                        unlocked={!!gs.unlocked[prerequisite]}
                         action={() =>
                            Singleton().sceneManager.getCurrent(TechTreeScene)?.selectNode(prerequisite, "animate")
                         }
@@ -43,13 +43,13 @@ export function TechPage({ params }: { params: { id: Tech } }) {
             </fieldset>
             <TechResearchProgressComponent
                name={tech.name()}
-               unlocked={!!config.unlocked[id]}
+               unlocked={!!gs.unlocked[id]}
                prerequisite={prerequisitesSatisfied}
                resource="Science"
                unlockLabel={t(L.UnlockBuilding)}
                unlockCost={getUnlockCost(tech)}
                onUnlocked={() => {
-                  unlockTech(id, config, gs);
+                  unlockTech(id, gs);
                   Singleton().sceneManager.getCurrent(TechTreeScene)?.renderTechTree("animate");
                }}
                gameState={gs}

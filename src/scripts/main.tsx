@@ -7,7 +7,8 @@ import { Route, Switch } from "wouter";
 import altasDef from "../images/textures.json";
 import atlas from "../images/textures.png";
 import { BG_COLOR } from "./Colors";
-import { Building, getBuildingTexture } from "./definitions/BuildingDefinitions";
+import { Building } from "./definitions/BuildingDefinitions";
+import { City } from "./definitions/CityDefinitions";
 import { fontBundle } from "./generated/FontBundle";
 import {
    GameStateChanged,
@@ -20,6 +21,7 @@ import {
    SpecialBuildings as ISpecialBuildings,
    syncUITheme,
 } from "./Global";
+import { getBuildingTexture } from "./logic/BuildingLogic";
 import { Config } from "./logic/Constants";
 import { initializeGameState } from "./logic/GameState";
 import { ITileData } from "./logic/Tile";
@@ -28,7 +30,6 @@ import "./main.css";
 import { Grid } from "./scenes/Grid";
 import { WorldScene } from "./scenes/WorldScene";
 import { LoadingPage } from "./ui/LoadingPage";
-import { RomeHistoryPage } from "./ui/RomeHistoryPage";
 import { RomeProvincePage } from "./ui/RomeProvincePage";
 import { TechPage } from "./ui/TechPage";
 import { TilePage } from "./ui/TilePage";
@@ -41,7 +42,6 @@ ReactDOM.render(
    <Switch>
       <Route path="/tile/:xy" component={TilePage} />
       <Route path="/tech/:id" component={TechPage} />
-      <Route path="/rome-history/:id" component={RomeHistoryPage} />
       <Route path="/rome-province/:id" component={RomeProvincePage} />
       <Route component={LoadingPage} />
    </Switch>,
@@ -92,7 +92,7 @@ async function startGame(app: Application, resources: MainBundleAssets, textures
    }
    const gameState = getGameState();
 
-   verifyBuildingTextures(textures);
+   verifyBuildingTextures(textures, gameState.city);
 
    const size = Config.City[gameState.city].size;
    const grid = new Grid(size, size, 64);
@@ -145,9 +145,9 @@ async function startGame(app: Application, resources: MainBundleAssets, textures
    setInterval(tickEverySecond.bind(null, gameState), 1000);
 }
 
-function verifyBuildingTextures(textures: Textures) {
+function verifyBuildingTextures(textures: Textures, city: City) {
    forEach(Config.Building, (b) => {
-      if (!getBuildingTexture(b, textures)) {
+      if (!getBuildingTexture(b, textures, city)) {
          console.warn(`Cannot find textures for building ${b}`);
       }
    });

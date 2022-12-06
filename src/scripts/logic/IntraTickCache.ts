@@ -2,8 +2,8 @@ import { Building } from "../definitions/BuildingDefinitions";
 import { Deposit, Resource } from "../definitions/ResourceDefinitions";
 import { PartialSet, PartialTabulate } from "../definitions/TypeDefinitions";
 import { forEach, safePush } from "../utilities/Helper";
-import { Config } from "./Constants";
 import { GameState } from "./GameState";
+import { getTechTree, getUnlocked } from "./TechLogic";
 import { ITileData } from "./Tile";
 
 class IntraTickCache {
@@ -24,8 +24,9 @@ export function revealedDeposits(gs: GameState): PartialSet<Deposit> {
       return _cache.revealedDeposits;
    }
    _cache.revealedDeposits = {};
-   forEach(gs.unlockedTech, (tech) => {
-      Config.Tech[tech].revealDeposit?.forEach((r) => {
+   forEach(gs.unlocked, (tech) => {
+      const def = getUnlocked(tech, getTechTree(gs).definitions);
+      def?.revealDeposit?.forEach((r) => {
          _cache.revealedDeposits![r] = true;
       });
    });
@@ -58,8 +59,8 @@ export function unlockedBuildings(gs: GameState): PartialSet<Building> {
    //       _cache.unlockedBuildings![r] = true;
    //    });
    // });
-   forEach(gs.unlockedRomeHistory, (tech) => {
-      Config.RomeHistory[tech].unlockBuilding?.forEach((r) => {
+   forEach(gs.unlocked, (tech) => {
+      getUnlocked(tech, getTechTree(gs).definitions)?.unlockBuilding?.forEach((r) => {
          _cache.unlockedBuildings![r] = true;
       });
    });

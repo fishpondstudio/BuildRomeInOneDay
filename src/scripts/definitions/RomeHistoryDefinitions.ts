@@ -1,25 +1,25 @@
 import { L, t } from "../utilities/i18n";
-import { ITechAge, ITechDefinition } from "./ITechDefinition";
+import { ITechAgeDefinition, ITechDefinition } from "./ITechDefinition";
 import { RomeProvince } from "./RomeProvinceDefinitions";
 
 export class RomeHistoryStageDefinitions {
-   AgeOfSevenKings: ITechAge = {
+   AgeOfSevenKings: ITechAgeDefinition = {
       from: 0,
       to: 1,
       name: () => t(L.AgeOfSevenKings),
    };
-   AgeOfRepublic: ITechAge = { from: 2, to: 3, name: () => t(L.AgeOfRepublic) };
-   MediterraneanSuperPower: ITechAge = {
+   AgeOfRepublic: ITechAgeDefinition = { from: 2, to: 3, name: () => t(L.AgeOfRepublic) };
+   MediterraneanSuperPower: ITechAgeDefinition = {
       from: 4,
       to: 7,
       name: () => t(L.MediterraneanSuperPower),
    };
-   AgeOfDictators: ITechAge = {
+   AgeOfDictators: ITechAgeDefinition = {
       from: 8,
       to: 9,
       name: () => t(L.AgeOfDictators),
    };
-   AgeOfTriumvirate: ITechAge = {
+   AgeOfTriumvirate: ITechAgeDefinition = {
       from: 10,
       to: 12,
       name: () => t(L.AgeOfTriumvirate),

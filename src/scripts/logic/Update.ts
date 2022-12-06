@@ -1,7 +1,6 @@
 import { Building } from "../definitions/BuildingDefinitions";
-import { IUnlockableConfig } from "../definitions/ITechDefinition";
+import { IUnlockableDefinition } from "../definitions/ITechDefinition";
 import { Resource } from "../definitions/ResourceDefinitions";
-import { RomeProvince } from "../definitions/RomeProvinceDefinitions";
 import { notifyGameStateUpdate, saveGame, Singleton } from "../Global";
 import { WorldScene } from "../scenes/WorldScene";
 import { filterOf, forEach, isEmpty, keysOf, safeAdd, safePush, sizeOf, sum } from "../utilities/Helper";
@@ -30,7 +29,7 @@ import { GameState } from "./GameState";
 import { clearIntraTickCache } from "./IntraTickCache";
 import { onBuildingComplete, onBuildingProductionComplete } from "./LogicCallback";
 import { getAmountInTransit } from "./ResourceLogic";
-import { getRomeHistoryConfig, getTechConfig } from "./TechLogic";
+import { getTechTree } from "./TechLogic";
 import { EmptyTickData, IModifier, Multiplier, Tick } from "./TickLogic";
 
 export function tickEveryFrame(gs: GameState, dt: number) {
@@ -71,15 +70,14 @@ export function tickEverySecond(gs: GameState) {
    Tick.next = EmptyTickData();
    clearIntraTickCache();
 
-   tickUnlockable(getTechConfig(gs), (name) => t(L.SourceResearch, { tech: name }));
-   tickUnlockable(getRomeHistoryConfig(gs), (name) => t(L.SourceResearch, { tech: name }));
-   tickUnlockable<RomeProvince>(
-      {
-         definitions: Config.RomeProvince,
-         unlocked: gs.annexedProvince,
-      },
-      (name) => t(L.SourceProvince, { province: name })
-   );
+   forEach(gs.unlocked, (tech) => {
+      const td: IUnlockableDefinition = getTechTree(gs).definitions[tech] ?? Config.City[gs.city].unlockable[tech];
+      if (td) {
+         tickUnlockable(td);
+         return;
+      }
+      console.warn(`Unlockable: ${tech} is not ticked. Check your definition in City.techTree or City.unlockable`);
+   });
    tickTileTech(gs);
    tickTransportation(gs);
    tickTiles(gs);
@@ -92,23 +90,20 @@ export function tickEverySecond(gs: GameState) {
    saveGame();
 }
 
-function tickUnlockable<T extends string>(config: IUnlockableConfig<T>, sourceLabel: (name: string) => string) {
-   forEach(config.unlocked, (tech) => {
-      const td = config.definitions[tech];
-      td.unlockBuilding?.forEach((b) => {
-         Tick.next.unlockedBuildings[b] = true;
-      });
-      forEach(td.buildingModifier, (k, v) => {
-         addModifier(k, v, sourceLabel(td.name()));
-      });
-      forEach(td.buildingMultiplier, (k, v) => {
-         addMultiplier(k, v, sourceLabel(td.name()));
-      });
-      forEach(td.globalMultiplier, (k, v) => {
-         Tick.next.globalMultipliers[k].push({
-            value: v,
-            source: sourceLabel(td.name()),
-         });
+function tickUnlockable(td: IUnlockableDefinition) {
+   td.unlockBuilding?.forEach((b) => {
+      Tick.next.unlockedBuildings[b] = true;
+   });
+   forEach(td.buildingModifier, (k, v) => {
+      addModifier(k, v, t(L.SourceResearch, { tech: td.name() }));
+   });
+   forEach(td.buildingMultiplier, (k, v) => {
+      addMultiplier(k, v, t(L.SourceResearch, { tech: td.name() }));
+   });
+   forEach(td.globalMultiplier, (k, v) => {
+      Tick.next.globalMultipliers[k].push({
+         value: v,
+         source: t(L.SourceResearch, { tech: td.name() }),
       });
    });
 }

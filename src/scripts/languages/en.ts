@@ -255,6 +255,7 @@ export const EN = {
    Cleopatra: "Cleopatra",
    SimaQian: "Sima Qian",
    Athens: "Athens",
+   Rome: "Rome",
    DepositTileCountDesc: "%{count} tile(s) of %{deposit} can be found in %{city}",
    Build: "Build",
    ConstructionProgress: "Progress",

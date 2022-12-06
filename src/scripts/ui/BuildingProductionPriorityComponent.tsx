@@ -10,7 +10,7 @@ export function BuildingProductionPriorityComponent({ gameState, xy }: IBuilding
    if (building == null || isEmpty(Tick.current.buildings[building.type].output)) {
       return null;
    }
-   if (!gameState.unlockedTech.Counting && !gameState.unlockedRomeHistory.Dictator) {
+   if (!gameState.unlocked.Counting && !gameState.unlocked.Dictator) {
       return null;
    }
    return (

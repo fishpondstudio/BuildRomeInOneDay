@@ -1,14 +1,10 @@
 import { IPointData } from "pixi.js";
 import { City } from "../definitions/CityDefinitions";
 import { Resource } from "../definitions/ResourceDefinitions";
-import { RomeHistory } from "../definitions/RomeHistoryDefinitions";
-import { RomeProvince } from "../definitions/RomeProvinceDefinitions";
-import { Tech } from "../definitions/TechDefinitions";
 import { PartialSet } from "../definitions/TypeDefinitions";
 import { Grid } from "../scenes/Grid";
 import { forEach, pointToXy } from "../utilities/Helper";
-import { Config } from "./Constants";
-import { getRomeHistoryConfig, unlockTech } from "./TechLogic";
+import { getTechTree, unlockTech } from "./TechLogic";
 import { ensureTileFogOfWar, findNearest } from "./TerrainLogic";
 import { ITileData, makeBuilding } from "./Tile";
 
@@ -28,9 +24,7 @@ interface ITransportationData {
 
 export class GameState {
    city: City = "Rome";
-   unlockedTech: PartialSet<Tech> = {};
-   unlockedRomeHistory: PartialSet<RomeHistory> = {};
-   annexedProvince: PartialSet<RomeProvince> = {};
+   unlocked: PartialSet<string> = {};
    tiles: Record<string, ITileData> = {};
    transportation: Record<string, ITransportationData[]> = {};
    tick = 0;
@@ -73,9 +67,10 @@ export function initializeGameState(gameState: GameState, grid: Grid) {
    //       unlockTech(k, getTechConfig(gameState), gameState);
    //    }
    // });
-   forEach(Config.RomeHistory, (k, v) => {
+   const techTree = getTechTree(gameState);
+   forEach(techTree.definitions, (k, v) => {
       if (v.column === 0) {
-         unlockTech(k, getRomeHistoryConfig(gameState), gameState);
+         unlockTech(k, gameState);
       }
    });
 

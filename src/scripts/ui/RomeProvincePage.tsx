@@ -23,13 +23,13 @@ export function RomeProvincePage({ params }: { params: { id: RomeProvince } }) {
          <div className="window-body">
             <TechResearchProgressComponent
                name={name}
-               unlocked={!!gs.annexedProvince[id]}
+               unlocked={!!gs.unlocked[id]}
                prerequisite={true}
                resource="Legion"
                unlockCost={def.unlockCost}
                unlockLabel={t(L.AnnexProvinceButton)}
                onUnlocked={() => {
-                  gs.annexedProvince[id] = true;
+                  gs.unlocked[id] = true;
                   Singleton().sceneManager.getCurrent(RomeProvinceScene)?.selectProvince(id)?.annex();
                }}
                gameState={gs}

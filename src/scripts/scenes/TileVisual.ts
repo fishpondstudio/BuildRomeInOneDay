@@ -1,11 +1,10 @@
 import { Easing, Tween } from "@tweenjs/tween.js";
 import { Viewport } from "pixi-viewport";
 import { BitmapText, Container, IPointData, Sprite } from "pixi.js";
-import { getBuildingTexture, getTileTexture } from "../definitions/BuildingDefinitions";
 import { Resource } from "../definitions/ResourceDefinitions";
 import { Fonts } from "../generated/FontBundle";
 import { getGameState, Singleton } from "../Global";
-import { getBuildingLevelLabel } from "../logic/BuildingLogic";
+import { getBuildingLevelLabel, getBuildingTexture, getTileTexture } from "../logic/BuildingLogic";
 import { GameState } from "../logic/GameState";
 import { ITileData } from "../logic/Tile";
 import { clamp, forEach, layoutCenter, pointToXy, sizeOf } from "../utilities/Helper";
@@ -148,7 +147,7 @@ export class TileVisual extends Container implements IDisposable {
    }
 
    public update(gs: GameState, dt: number) {
-      const { textures } = this._world.context;
+      const { textures, gameState } = this._world.context;
       if (!this._tile) {
          console.warn(`[TileVisual] Cannot find tile data for ${pointToXy(this._grid)}`);
          return;
@@ -165,7 +164,7 @@ export class TileVisual extends Container implements IDisposable {
       }
       this._building.visible = true;
       if (this._building.texture.noFrame) {
-         this._building.texture = getBuildingTexture(this._tile.building.type, textures);
+         this._building.texture = getBuildingTexture(this._tile.building.type, textures, gameState.city);
          this.updateLayout();
       }
       this._level.visible = true;

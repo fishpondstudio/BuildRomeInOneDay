@@ -1,16 +1,8 @@
-import banner from "../../images/banner.png";
 import { Singleton } from "../Global";
 import { getScienceFromWorkers } from "../logic/BuildingLogic";
-import { Config } from "../logic/Constants";
-import {
-   getCurrentTechAge,
-   getRomeHistoryConfig,
-   getScienceAmount,
-   getUnlockCost,
-   unlockableTechs,
-} from "../logic/TechLogic";
+import { getCurrentTechAge, getScienceAmount, getTechTree, getUnlockCost, unlockableTechs } from "../logic/TechLogic";
 import { Tick } from "../logic/TickLogic";
-import { RomeHistoryScene } from "../scenes/TechTreeScene";
+import { TechTreeScene } from "../scenes/TechTreeScene";
 import { formatPercent } from "../utilities/Helper";
 import { L, t } from "../utilities/i18n";
 import { IBuildingComponentProps } from "./BuildingPage";
@@ -29,12 +21,10 @@ export function HeadquarterBuildingBody({ gameState, xy }: IBuildingComponentPro
       sciencePerIdleWorker,
    } = getScienceFromWorkers(gameState);
    const scienceAmount = getScienceAmount();
-   const config = getRomeHistoryConfig(gameState);
-   const techAge = getCurrentTechAge(config);
+   const config = getTechTree(gameState);
+   const techAge = getCurrentTechAge(gameState);
    return (
       <div className="window-body">
-         <img style={{ width: "100%" }} src={banner} />
-         <div className="sep10"></div>
          <BuildingProduceComponent gameState={gameState} xy={xy} />
          <fieldset>
             <legend>Census</legend>
@@ -52,7 +42,7 @@ export function HeadquarterBuildingBody({ gameState, xy }: IBuildingComponentPro
             </div>
          </fieldset>
          <fieldset>
-            <legend>{techAge != null ? Config.RomeHistoryStage[techAge].name() : "Unknown Age"}</legend>
+            <legend>{techAge != null ? config.ages[techAge].name() : "Unknown Age"}</legend>
             <div className="row mv5">
                <div className="f1">{t(L.Science)}</div>
                <div className="text-strong">
@@ -134,11 +124,11 @@ export function HeadquarterBuildingBody({ gameState, xy }: IBuildingComponentPro
                      </tr>
                   </thead>
                   <tbody>
-                     {unlockableTechs(config).map((k) => {
+                     {unlockableTechs(gameState).map((k) => {
                         const unlockCost = getUnlockCost(config.definitions[k]);
                         return (
                            <tr key={k}>
-                              <td>{Config.RomeHistory[k].name()}</td>
+                              <td>{config.definitions[k].name()}</td>
                               <td className="right">
                                  <FormatNumber value={unlockCost} />
                               </td>
@@ -153,7 +143,7 @@ export function HeadquarterBuildingBody({ gameState, xy }: IBuildingComponentPro
                                  <span
                                     className="text-link"
                                     onClick={() => {
-                                       Singleton().sceneManager.loadScene(RomeHistoryScene)?.selectNode(k, "jump");
+                                       Singleton().sceneManager.loadScene(TechTreeScene)?.selectNode(k, "jump");
                                     }}
                                  >
                                     {t(L.View)}

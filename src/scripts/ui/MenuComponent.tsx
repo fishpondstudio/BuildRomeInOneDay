@@ -3,7 +3,7 @@ import { PropsWithChildren, useEffect, useRef, useState } from "react";
 import { useRoute } from "wouter";
 import { getGameOptions, getGameState, Singleton, syncUITheme } from "../Global";
 import { RomeProvinceScene } from "../scenes/RomeProvinceScene";
-import { RomeHistoryScene } from "../scenes/TechTreeScene";
+import { TechTreeScene } from "../scenes/TechTreeScene";
 import { WorldScene } from "../scenes/WorldScene";
 import { L, t } from "../utilities/i18n";
 
@@ -107,11 +107,11 @@ export function MenuComponent() {
                   <div
                      className="menu-popover-item"
                      onPointerDown={(e) => {
-                        Singleton().sceneManager.loadScene(RomeHistoryScene);
+                        Singleton().sceneManager.loadScene(TechTreeScene);
                         setActive(null);
                      }}
                   >
-                     <MenuItem visible={Singleton().sceneManager.isCurrent(RomeHistoryScene)}>
+                     <MenuItem visible={Singleton().sceneManager.isCurrent(TechTreeScene)}>
                         {t(L.ResearchMenu)}
                      </MenuItem>
                   </div>

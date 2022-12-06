@@ -1,7 +1,7 @@
 import { L, t } from "../utilities/i18n";
-import { IUnlockable } from "./ITechDefinition";
+import { IUnlockableDefinition } from "./ITechDefinition";
 
-export interface IProvince extends IUnlockable {
+export interface IProvince extends IUnlockableDefinition {
    visual: IProvinceVisual;
    unlockCost: number;
 }

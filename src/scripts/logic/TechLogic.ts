@@ -1,7 +1,6 @@
-import { ITechConfigWithAge, ITechDefinition } from "../definitions/ITechDefinition";
+import { TechTree } from "../definitions/CityDefinitions";
+import { ITechDefinition, IUnlockableDefinition } from "../definitions/ITechDefinition";
 import { Deposit } from "../definitions/ResourceDefinitions";
-import { RomeHistory, RomeHistoryStage, RomeHistoryUnlockDefinitions } from "../definitions/RomeHistoryDefinitions";
-import { Tech, TechAge, TechUnlockDefinitions } from "../definitions/TechDefinitions";
 import { Singleton } from "../Global";
 import { forEach, isEmpty, keysOf, shuffle } from "../utilities/Helper";
 import { Config } from "./Constants";
@@ -16,39 +15,46 @@ export function getScienceAmount(): number {
    return Singleton().buildings.Headquarter.building.resources.Science ?? 0;
 }
 
-export function getMostAdvancedTech<T extends string, K extends string>(config: ITechConfigWithAge<T, K>): T | null {
+export function getTechTree(gs: GameState) {
+   return TechTree[Config.City[gs.city].techTree];
+}
+
+export function getMostAdvancedTech(gs: GameState): string | null {
    let column = 0;
-   let tech: T | null = null;
-   forEach(config.definitions, (k) => {
-      if (config.unlocked[k] && config.definitions[k].column >= column) {
-         column = config.definitions[k].column;
+   let tech: string | null = null;
+   const definitions = getTechTree(gs).definitions;
+   forEach(definitions, (k) => {
+      if (gs.unlocked[k] && definitions[k].column >= column) {
+         column = definitions[k].column;
          tech = k;
       }
    });
    return tech;
 }
 
-export function getCurrentTechAge<T extends string, K extends string>(config: ITechConfigWithAge<T, K>): K | null {
-   const tech = getMostAdvancedTech(config);
+export function getCurrentTechAge(gs: GameState): string | null {
+   const tech = getMostAdvancedTech(gs);
    if (!tech) {
       return null;
    }
-   return getAgeForTech(tech, config);
+   return getAgeForTech(tech, gs);
 }
 
-export function isAgeUnlocked<T extends string, K extends string>(age: K, config: ITechConfigWithAge<T, K>): boolean {
-   const tech = getMostAdvancedTech(config);
+export function isAgeUnlocked(age: string, gs: GameState): boolean {
+   const techTree = getTechTree(gs);
+   const tech = getMostAdvancedTech(gs);
    if (!tech) {
       return false;
    }
-   return config.definitions[tech].column >= config.ageDefinitions[age].from;
+   return techTree.definitions[tech].column >= techTree.ages[age].from;
 }
 
-export function getAgeForTech<T extends string, K extends string>(tech: T, config: ITechConfigWithAge<T, K>): K | null {
-   const techColumn = config.definitions[tech].column;
-   let age: K;
-   for (age in config.ageDefinitions) {
-      const ageDef = config.ageDefinitions[age];
+export function getAgeForTech(tech: string, gs: GameState): string | null {
+   const techTree = getTechTree(gs);
+   const techColumn = techTree.definitions[tech].column;
+   let age: string;
+   for (age in techTree.ages) {
+      const ageDef = techTree.ages[age];
       if (techColumn >= ageDef.from && techColumn <= ageDef.to) {
          return age;
       }
@@ -56,16 +62,12 @@ export function getAgeForTech<T extends string, K extends string>(tech: T, confi
    return null;
 }
 
-export function unlockTech<T extends string, K extends string>(
-   tech: T,
-   config: ITechConfigWithAge<T, K>,
-   gs: GameState
-): void {
-   if (config.unlocked[tech]) {
+export function unlockTech(tech: string, gs: GameState): void {
+   if (gs.unlocked[tech]) {
       return;
    }
-   config.unlocked[tech] = true;
-   const td = config.definitions[tech];
+   gs.unlocked[tech] = true;
+   const td = getTechTree(gs).definitions[tech];
    td.revealDeposit?.forEach((deposit) => {
       const tileCount = getDepositTileCount(deposit, gs);
       const tiles = shuffle(keysOf(gs.tiles)).slice(0, tileCount);
@@ -87,31 +89,24 @@ export function getDepositUnlockTech<T extends string>(deposit: Deposit, definit
    throw new Error(`Deposit ${deposit} is not revealed by any technology, check TechDefinitions`);
 }
 
-export function getTechConfig(gs: GameState): ITechConfigWithAge<Tech, TechAge> {
-   return {
-      definitions: Config.Tech,
-      ageDefinitions: Config.TechAge,
-      unlockDefinitions: TechUnlockDefinitions,
-      unlocked: gs.unlockedTech,
-   };
+export function getUnlocked(
+   key: string,
+   definitions: Record<string, IUnlockableDefinition>
+): IUnlockableDefinition | null {
+   if (key in definitions) {
+      return definitions[key];
+   }
+   return null;
 }
 
-export function getRomeHistoryConfig(gs: GameState): ITechConfigWithAge<RomeHistory, RomeHistoryStage> {
-   return {
-      definitions: Config.RomeHistory,
-      ageDefinitions: Config.RomeHistoryStage,
-      unlockDefinitions: RomeHistoryUnlockDefinitions,
-      unlocked: gs.unlockedRomeHistory,
-   };
-}
-
-export function unlockableTechs<T extends string, K extends string>(config: ITechConfigWithAge<T, K>): T[] {
-   const result: T[] = [];
-   forEach(config.definitions, (tech, def) => {
-      if (config.unlocked[tech]) {
+export function unlockableTechs(gs: GameState): string[] {
+   const techTree = getTechTree(gs);
+   const result: string[] = [];
+   forEach(techTree.definitions, (tech, def) => {
+      if (gs.unlocked[tech]) {
          return;
       }
-      if (config.unlockDefinitions[tech].every((t) => config.unlocked[t])) {
+      if (techTree.prerequisites[tech].every((t) => gs.unlocked[t])) {
          result.push(tech);
       }
    });

@@ -1,5 +1,4 @@
 import { L, t } from "../utilities/i18n";
-import { Textures } from "../utilities/SceneManager";
 import { Resource } from "./ResourceDefinitions";
 import { PartialSet, PartialTabulate } from "./TypeDefinitions";
 
@@ -498,13 +497,4 @@ export class BuildingDefinitions {
    //    wikipedia: "Mogao_Caves",
    // };
 }
-
-export function getBuildingTexture(b: Building, textures: Textures) {
-   return textures[`Building${b}`];
-}
-
-export function getTileTexture(r: Resource, textures: Textures) {
-   return textures[`Tile${r}`];
-}
-
 export type Building = keyof BuildingDefinitions;
