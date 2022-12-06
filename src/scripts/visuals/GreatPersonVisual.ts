@@ -22,7 +22,8 @@ function makeText(text: string, size: number, tint: number) {
 }
 
 function makeTextAutoSize(text: string, size: number, tint: number, maxWidth: number) {
-   while (true) {
+   let i = 0;
+   while (++i < 100) {
       const result = makeText(text, size, tint);
       if (result.width <= maxWidth) {
          return result;

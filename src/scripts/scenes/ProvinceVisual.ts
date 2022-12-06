@@ -75,7 +75,7 @@ export class ProvinceVisual extends Container {
       return (ProvinceVisual.hitmapCache[this.province]![ind2] & (1 << ind1)) !== 0;
    }
 
-   private _outline: boolean = false;
+   private _outline = false;
    public get outline(): boolean {
       return this._outline;
    }

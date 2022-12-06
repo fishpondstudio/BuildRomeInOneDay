@@ -40,7 +40,6 @@ export class Grid {
             if (this.isEdge({ x, y })) {
                continue;
             }
-            // eslint-disable-next-line n/no-callback-literal
             cb({ x, y });
          }
       }
@@ -72,7 +71,7 @@ export class Grid {
       return { x: o.col, y: o.row };
    }
 
-   public isEdge(grid: Point, edgeSize: number = 1) {
+   public isEdge(grid: Point, edgeSize = 1) {
       if (
          grid.x < edgeSize ||
          grid.y < edgeSize ||
