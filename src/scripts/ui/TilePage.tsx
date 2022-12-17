@@ -7,8 +7,7 @@ import "./UIExtension.css";
 import { UnexploredTile } from "./UnexploredTile";
 import { UpgradingPage } from "./UpgradingPage";
 
-export function TilePage({ params }: { params: { xy: string } }) {
-   const { xy } = params;
+export function TilePage({ xy }: { xy: string }) {
    const gameState = useGameState();
    if (!xy || !isSingletonReady()) {
       return null;

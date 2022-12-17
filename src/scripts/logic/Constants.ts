@@ -4,7 +4,6 @@ import { GreatPersonDefinitions } from "../definitions/GreatPersonDefinitions";
 import { DepositResources, Resource, ResourceDefinitions } from "../definitions/ResourceDefinitions";
 import { RomeHistoryDefinitions, RomeHistoryStageDefinitions } from "../definitions/RomeHistoryDefinitions";
 import { RomeProvinceDefinitions } from "../definitions/RomeProvinceDefinitions";
-import { TechAgeDefinitions, TechDefinitions } from "../definitions/TechDefinitions";
 import { PartialTabulate } from "../definitions/TypeDefinitions";
 import { forEach, isEmpty, keysOf, sizeOf, tabulateAdd } from "../utilities/Helper";
 import { getDepositUnlockTech } from "./TechLogic";
@@ -19,8 +18,6 @@ const ResourceTech: PartialTabulate<Resource> = {};
 export const Config = {
    Building: Object.freeze(new BuildingDefinitions()),
    Resource: Object.freeze(new ResourceDefinitions()),
-   Tech: Object.freeze(new TechDefinitions()),
-   TechAge: Object.freeze(new TechAgeDefinitions()),
    GreatPerson: Object.freeze(new GreatPersonDefinitions()),
    City: Object.freeze(new CityDefinitions()),
    RomeProvince: Object.freeze(new RomeProvinceDefinitions()),

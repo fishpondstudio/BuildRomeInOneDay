@@ -1,7 +1,6 @@
 import classNames from "classnames";
 import { PropsWithChildren, useEffect, useRef, useState } from "react";
-import { useRoute } from "wouter";
-import { getGameOptions, getGameState, Singleton, syncUITheme } from "../Global";
+import { getGameOptions, Singleton, syncUITheme } from "../Global";
 import { RomeProvinceScene } from "../scenes/RomeProvinceScene";
 import { TechTreeScene } from "../scenes/TechTreeScene";
 import { WorldScene } from "../scenes/WorldScene";
@@ -18,7 +17,7 @@ function MenuButton({ name }: { name: string }) {
    );
 }
 
-function MenuItem({ visible, children }: PropsWithChildren<{ visible: boolean }>) {
+function MenuItem({ check, children }: PropsWithChildren<{ check: boolean }>) {
    return (
       <>
          <svg
@@ -30,7 +29,7 @@ function MenuItem({ visible, children }: PropsWithChildren<{ visible: boolean }>
                fill: "currentcolor",
                display: "inline-block",
                verticalAlign: "middle",
-               visibility: visible ? "visible" : "hidden",
+               visibility: check ? "visible" : "hidden",
                marginRight: "2px",
                marginLeft: "2px",
             }}
@@ -45,8 +44,6 @@ function MenuItem({ visible, children }: PropsWithChildren<{ visible: boolean }>
 export function MenuComponent() {
    const [active, setActive] = useState<MenuItemOptions>(null);
    const buttonRef = useRef(null);
-   const [match, params] = useRoute("/tile/:xy");
-
    useEffect(() => {
       function onPointerDown(e: PointerEvent) {
          setActive(null);
@@ -90,7 +87,7 @@ export function MenuComponent() {
                         setActive(null);
                      }}
                   >
-                     <MenuItem visible={Singleton().sceneManager.isCurrent(WorldScene)}>{t(L.CityViewMap)}</MenuItem>
+                     <MenuItem check={Singleton().sceneManager.isCurrent(WorldScene)}>{t(L.CityViewMap)}</MenuItem>
                   </div>
                   {/* <div
                         
@@ -111,9 +108,7 @@ export function MenuComponent() {
                         setActive(null);
                      }}
                   >
-                     <MenuItem visible={Singleton().sceneManager.isCurrent(TechTreeScene)}>
-                        {t(L.ResearchMenu)}
-                     </MenuItem>
+                     <MenuItem check={Singleton().sceneManager.isCurrent(TechTreeScene)}>{t(L.ResearchMenu)}</MenuItem>
                   </div>
                   <div
                      className="menu-popover-item"
@@ -122,7 +117,7 @@ export function MenuComponent() {
                         setActive(null);
                      }}
                   >
-                     <MenuItem visible={Singleton().sceneManager.isCurrent(RomeProvinceScene)}>
+                     <MenuItem check={Singleton().sceneManager.isCurrent(RomeProvinceScene)}>
                         {t(L.RomeMapMenu)}
                      </MenuItem>
                   </div>
@@ -159,7 +154,7 @@ export function MenuComponent() {
                         setActive(null);
                      }}
                   >
-                     <MenuItem visible={getGameOptions().useModernUI}>{t(L.OptionsUseModernUI)}</MenuItem>
+                     <MenuItem check={getGameOptions().useModernUI}>{t(L.OptionsUseModernUI)}</MenuItem>
                   </div>
                </div>
             </div>
@@ -168,9 +163,6 @@ export function MenuComponent() {
                onClick={() => {
                   if (import.meta.env.PROD) {
                      return;
-                  }
-                  if (match && params.xy) {
-                     console.log(getGameState().tiles[params.xy]);
                   }
                }}
             >

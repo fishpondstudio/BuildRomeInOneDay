@@ -3,7 +3,6 @@ import { update } from "@tweenjs/tween.js";
 import * as debug_PIXI from "pixi.js";
 import { Application, Spritesheet } from "pixi.js";
 import ReactDOM from "react-dom";
-import { Route, Switch } from "wouter";
 import altasDef from "../images/textures.json";
 import atlas from "../images/textures.png";
 import { BG_COLOR } from "./Colors";
@@ -27,26 +26,15 @@ import { initializeGameState } from "./logic/GameState";
 import { ITileData } from "./logic/Tile";
 import { tickEveryFrame, tickEverySecond } from "./logic/Update";
 import "./main.css";
+import { Route } from "./Route";
 import { Grid } from "./scenes/Grid";
 import { WorldScene } from "./scenes/WorldScene";
-import { LoadingPage } from "./ui/LoadingPage";
-import { RomeProvincePage } from "./ui/RomeProvincePage";
-import { TechPage } from "./ui/TechPage";
-import { TilePage } from "./ui/TilePage";
 import { forEach } from "./utilities/Helper";
 import { SceneManager, Textures } from "./utilities/SceneManager";
 
 const ui = document.getElementById("game-ui");
 
-ReactDOM.render(
-   <Switch>
-      <Route path="/tile/:xy" component={TilePage} />
-      <Route path="/tech/:id" component={TechPage} />
-      <Route path="/rome-province/:id" component={RomeProvincePage} />
-      <Route component={LoadingPage} />
-   </Switch>,
-   ui
-);
+ReactDOM.render(<Route />, ui);
 
 const canvas = document.getElementById("game-canvas");
 

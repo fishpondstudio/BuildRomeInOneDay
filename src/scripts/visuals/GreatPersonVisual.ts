@@ -22,14 +22,11 @@ function makeText(text: string, size: number, tint: number) {
 }
 
 function makeTextAutoSize(text: string, size: number, tint: number, maxWidth: number) {
-   let i = 0;
-   while (++i < 100) {
-      const result = makeText(text, size, tint);
-      if (result.width <= maxWidth) {
-         return result;
-      }
-      size--;
+   let result = makeText(text, size, tint);
+   while (result.width > maxWidth) {
+      result = makeText(text, --size, tint);
    }
+   return result;
 }
 
 export function greatPersonSprite(greatPerson: GreatPerson, context: ISceneContext): Sprite {

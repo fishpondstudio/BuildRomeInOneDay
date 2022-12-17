@@ -2,8 +2,9 @@ import { Viewport } from "pixi-viewport";
 import { InteractionEvent, Sprite } from "pixi.js";
 import { ROMAN_MAP_BG_COLOR } from "../Colors";
 import { IProvinceVisual, RomeProvince } from "../definitions/RomeProvinceDefinitions";
-import { routeTo } from "../Global";
 import { Config } from "../logic/Constants";
+import { routeTo } from "../Route";
+import { TechPage } from "../ui/TechPage";
 import { forEach } from "../utilities/Helper";
 import { Scene } from "../utilities/SceneManager";
 import { ProvinceVisual } from "./ProvinceVisual";
@@ -63,7 +64,7 @@ export class RomeProvinceScene extends Scene {
             if (s.isClicked(e) && this._selectedProvince === null) {
                this._selectedProvince = s;
                s.outline = true;
-               routeTo(`/rome-province/${s.province}`);
+               routeTo(TechPage, { id: s.province, type: "RomeProvince" as const });
             } else {
                s.outline = false;
             }
@@ -89,7 +90,7 @@ export class RomeProvinceScene extends Scene {
          if (s.province === id && this._selectedProvince === null) {
             this._selectedProvince = s;
             s.outline = true;
-            routeTo(`/rome-province/${s.province}`);
+            routeTo(TechPage, { id: s.province, type: "RomeProvince" as const });
          } else {
             s.outline = false;
          }

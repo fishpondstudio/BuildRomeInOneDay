@@ -1,14 +1,10 @@
 import { L, t } from "../utilities/i18n";
 import { Building } from "./BuildingDefinitions";
-import { ITechTree, IUnlockableDefinition } from "./ITechDefinition";
+import { ITechTree, IUnlockableDefinition, IUnlockableGroup } from "./ITechDefinition";
 import { Deposit } from "./ResourceDefinitions";
-import {
-   RomeHistoryDefinitions,
-   RomeHistoryStageDefinitions,
-   RomeHistoryUnlockDefinitions,
-} from "./RomeHistoryDefinitions";
+import { RomeHistoryDefinitions, RomeHistoryStageDefinitions } from "./RomeHistoryDefinitions";
 import { RomeProvinceDefinitions } from "./RomeProvinceDefinitions";
-import { TechAgeDefinitions, TechDefinitions, TechUnlockDefinitions } from "./TechDefinitions";
+// import { TechAgeDefinitions, TechDefinitions } from "./TechDefinitions";
 
 export class CityDefinitions {
    Rome: ICityDefinition = {
@@ -40,25 +36,25 @@ export class CityDefinitions {
       buildingTexture: {
          Headquarter: "BuildingHeadquarterRome",
       },
-      techTree: "Generic",
+      techTree: "Rome",
       unlockable: {},
    };
 }
 
-export class TechTreeDefinitions {
-   Generic: ITechTree = {
-      definitions: Object.freeze(new TechDefinitions()),
-      prerequisites: TechUnlockDefinitions,
-      ages: Object.freeze(new TechAgeDefinitions()),
-   };
-   Rome: ITechTree = {
+export const TechTree = {
+   Rome: {
       definitions: Object.freeze(new RomeHistoryDefinitions()),
-      prerequisites: RomeHistoryUnlockDefinitions,
       ages: Object.freeze(new RomeHistoryStageDefinitions()),
-   };
-}
+      verb: () => t(L.Research),
+   } as ITechTree,
+} as const satisfies Record<string, ITechTree>;
 
-export const TechTree = Object.freeze(new TechTreeDefinitions());
+export const Unlockable = {
+   RomeProvince: {
+      definitions: Object.freeze(new RomeProvinceDefinitions()),
+      verb: () => t(L.Annex),
+   } as IUnlockableGroup,
+} as const satisfies Record<string, IUnlockableGroup>;
 
 export type City = keyof CityDefinitions;
 
@@ -67,6 +63,6 @@ interface ICityDefinition {
    size: number;
    name: () => string;
    buildingTexture: Partial<Record<Building, string>>;
-   techTree: keyof TechTreeDefinitions;
+   techTree: keyof typeof TechTree;
    unlockable: Record<string, IUnlockableDefinition>;
 }

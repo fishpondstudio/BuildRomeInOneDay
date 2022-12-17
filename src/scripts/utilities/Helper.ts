@@ -67,11 +67,13 @@ export function formatPercent(p: number, decimal = 2) {
    return `${round(p * 100, decimal)}%`;
 }
 
-export function keysOf<T extends Record<string, unknown>>(obj: T): Array<keyof T> {
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function keysOf<T extends {}>(obj: T): Array<keyof T> {
    return Object.keys(obj) as Array<keyof T>;
 }
 
-export function forEach<T extends Record<string, unknown>>(
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function forEach<T extends {}>(
    obj: T | undefined,
    // eslint-disable-next-line @typescript-eslint/no-invalid-void-type
    func: (k: keyof T, v: NonNullable<T[keyof T]>) => boolean | void
@@ -85,7 +87,8 @@ export function forEach<T extends Record<string, unknown>>(
    }
 }
 
-export function reduceOf<T extends Record<string, unknown>, K>(
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function reduceOf<T extends {}, K>(
    obj: T | undefined,
    func: (prev: K, k: keyof T, v: NonNullable<T[keyof T]>) => K,
    initial: K
@@ -269,7 +272,8 @@ export function shuffle<T>(array: T[], rand?: () => number): T[] {
    return array;
 }
 
-export function isEmpty(obj: Record<string, unknown> | null | undefined): boolean {
+// eslint-disable-next-line @typescript-eslint/ban-types
+export function isEmpty(obj: {} | null | undefined): boolean {
    if (!obj) {
       return true;
    }

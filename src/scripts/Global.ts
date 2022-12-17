@@ -39,10 +39,6 @@ export function Singleton(): ISingleton {
    return singletons;
 }
 
-export function routeTo(url: string) {
-   return history.pushState(null, "", url);
-}
-
 const savedGame = new SavedGame();
 
 if (import.meta.env.DEV) {

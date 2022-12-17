@@ -1,45 +1,63 @@
-import { Tech, TechUnlockDefinitions } from "../definitions/TechDefinitions";
+import { Unlockable } from "../definitions/CityDefinitions";
+import { IUnlockableGroup } from "../definitions/ITechDefinition";
+import { IRomeHistoryDefinitions } from "../definitions/RomeHistoryDefinitions";
 import { Singleton, useGameState } from "../Global";
 import { Config } from "../logic/Constants";
-import { getAgeForTech, getTechTree, getUnlockCost, unlockTech } from "../logic/TechLogic";
+import { getTechTree, getUnlockCost, unlockTech } from "../logic/TechLogic";
+import { RomeProvinceScene } from "../scenes/RomeProvinceScene";
 import { TechTreeScene } from "../scenes/TechTreeScene";
 import { L, t } from "../utilities/i18n";
 import { MenuComponent } from "./MenuComponent";
 import { TechPrerequisiteItemComponent, TechResearchProgressComponent } from "./TechComponent";
 import { UnlockableEffectComponent } from "./UnlockableEffectComponent";
 
-export function TechPage({ params }: { params: { id: Tech } }) {
-   const id = params.id;
-   const tech = Config.Tech[id];
+export function TechPage({ id, type }: { id: string; type?: keyof typeof Unlockable }) {
    const gs = useGameState();
-   const config = getTechTree(gs);
-   const prerequisites = TechUnlockDefinitions[id];
-   const prerequisitesSatisfied = prerequisites.every((t) => gs.unlocked[t]);
+   const config: IUnlockableGroup = type ? Unlockable[type] : getTechTree(gs);
+   const tech = config.definitions[id];
+   const prerequisitesSatisfied = tech.require.every((t) => gs.unlocked[t]);
    return (
       <div className="window">
          <div className="title-bar">
             <div className="title-bar-text">
-               {t(L.Research)}: {tech.name()}
+               {config.verb()}: {tech.name()}
             </div>
          </div>
          <MenuComponent />
          <div className="window-body">
             <fieldset>
                <legend>{t(L.TechnologyPrerequisite)}</legend>
-               {prerequisites.map((prerequisite) => {
-                  const techAge = getAgeForTech(prerequisite, gs);
-                  const techAgeLabel = techAge ? `(${config.ages[techAge].name()})` : "";
+               {tech.require.map((prerequisite) => {
                   return (
                      <TechPrerequisiteItemComponent
-                        name={`${config.definitions[prerequisite].name()} ${techAgeLabel}`}
+                        key={prerequisite}
+                        name={
+                           <>
+                              {config.verb()} <b>{config.definitions[prerequisite].name()}</b>
+                           </>
+                        }
                         unlocked={!!gs.unlocked[prerequisite]}
                         action={() =>
-                           Singleton().sceneManager.getCurrent(TechTreeScene)?.selectNode(prerequisite, "animate")
+                           Singleton().sceneManager.loadScene(TechTreeScene)?.selectNode(prerequisite, "animate")
                         }
                      />
                   );
                })}
-               {prerequisites.length === 0 ? <div>{t(L.TechnologyNoPrerequisite)}</div> : null}
+               {(tech as IRomeHistoryDefinitions).requireProvince?.map((province) => {
+                  return (
+                     <TechPrerequisiteItemComponent
+                        key={province}
+                        name={
+                           <>
+                              {t(L.Annex)} <b>{Config.RomeProvince[province].name()}</b>
+                           </>
+                        }
+                        unlocked={!!gs.unlocked[province]}
+                        action={() => Singleton().sceneManager.loadScene(RomeProvinceScene)?.selectProvince(province)}
+                     />
+                  );
+               })}
+               {tech.require.length === 0 ? <div>{t(L.TechnologyNoPrerequisite)}</div> : null}
             </fieldset>
             <TechResearchProgressComponent
                name={tech.name()}

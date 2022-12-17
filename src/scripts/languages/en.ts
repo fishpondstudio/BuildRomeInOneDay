@@ -411,6 +411,7 @@ export const EN = {
    Barrack: "Barrack",
    Weapon: "Weapon",
    AnnexProvince: "Annex %{name} Province",
+   Annex: "Annex",
    Province: "Province",
    Progress: "Progress",
    Villa: "Villa",

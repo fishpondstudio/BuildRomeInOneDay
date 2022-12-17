@@ -77,7 +77,7 @@ export function TechPrerequisiteItemComponent({
    unlocked,
    action,
 }: {
-   name: string;
+   name: JSX.Element | string;
    unlocked: boolean;
    action: () => void;
 }) {

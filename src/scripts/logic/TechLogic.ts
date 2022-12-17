@@ -106,7 +106,7 @@ export function unlockableTechs(gs: GameState): string[] {
       if (gs.unlocked[tech]) {
          return;
       }
-      if (techTree.prerequisites[tech].every((t) => gs.unlocked[t])) {
+      if (def.require.every((t) => gs.unlocked[t])) {
          result.push(tech);
       }
    });

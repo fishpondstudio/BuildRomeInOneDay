@@ -37,9 +37,9 @@ export class SceneManager {
       return this.context;
    }
 
-   loadScene<T extends Scene>(SceneClass: new (context: ISceneContext) => T, force = false): T | null {
+   loadScene<T extends Scene>(SceneClass: new (context: ISceneContext) => T, force = false): T {
       if (!force && this.isCurrent(SceneClass)) {
-         return null;
+         return this.currentScene as T;
       }
       if (this.currentScene) {
          this.currentScene.onDestroy();
@@ -56,7 +56,11 @@ export class SceneManager {
    }
 
    isCurrent(SceneClass: typeof Scene): boolean {
-      return this.currentScene instanceof SceneClass;
+      // This is for HMR
+      if (!this.currentScene) {
+         return false;
+      }
+      return Object.getPrototypeOf(this.currentScene).constructor.name === SceneClass.name;
    }
 
    getCurrent<T extends Scene>(SceneClass: new (context: ISceneContext) => T): T | null {

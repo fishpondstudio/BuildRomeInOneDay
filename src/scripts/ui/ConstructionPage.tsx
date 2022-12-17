@@ -1,15 +1,17 @@
-import { notifyGameStateUpdate, routeTo, Singleton, useGameState } from "../Global";
+import { notifyGameStateUpdate, Singleton, useGameState } from "../Global";
 import { Tick } from "../logic/TickLogic";
 import { ITileData } from "../logic/Tile";
+import { routeTo } from "../Route";
 import { WorldScene } from "../scenes/WorldScene";
 import { L, t } from "../utilities/i18n";
 import { BuildingConstructionProgressComponent } from "./BuildingConstructionProgressComponent";
 import { BuildingWarningComponent } from "./BuildingWarningComponent";
+import { LoadingPage } from "./LoadingPage";
 import { MenuComponent } from "./MenuComponent";
 
 export function ConstructionPage({ tile }: { tile: ITileData }): JSX.Element | null {
    if (tile.building == null) {
-      routeTo("/");
+      routeTo(LoadingPage, {});
       return null;
    }
    const building = tile.building;

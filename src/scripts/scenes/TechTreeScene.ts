@@ -5,6 +5,8 @@ import { BitmapText, Container, LINE_CAP, LINE_JOIN, Rectangle } from "pixi.js";
 import { BG_COLOR } from "../Colors";
 import { Fonts } from "../generated/FontBundle";
 import { getTechTree, isAgeUnlocked, unlockableTechs } from "../logic/TechLogic";
+import { routeTo } from "../Route";
+import { TechPage } from "../ui/TechPage";
 import { forEach } from "../utilities/Helper";
 import { Scene } from "../utilities/SceneManager";
 
@@ -132,8 +134,8 @@ export class TechTreeScene extends Scene {
          );
       });
 
-      forEach(techTree.prerequisites, (to, v) => {
-         v.forEach((from) => {
+      forEach(techTree.definitions, (to, v) => {
+         v.require.forEach((from) => {
             this.drawConnection(
                g,
                this._boxPositions[from]!.x + BOX_WIDTH,
@@ -160,6 +162,7 @@ export class TechTreeScene extends Scene {
       }
       const techTree = getTechTree(this.context.gameState);
       this._selectedTech = tech;
+      routeTo(TechPage, { id: tech });
       this._selectedGraphics.lineStyle(LINE_STYLE);
       let targets = [tech];
       const drawnBoxes: Partial<Record<string, true>> = {};
@@ -178,7 +181,7 @@ export class TechTreeScene extends Scene {
                );
                drawnBoxes[to] = true;
             }
-            techTree.prerequisites[to].forEach((from) => {
+            techTree.definitions[to].require.forEach((from) => {
                newTo.push(from);
                const key = `${from} -> ${to}`;
                // rome-ignore lint: bad suggestions
