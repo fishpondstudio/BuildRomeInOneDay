@@ -4,8 +4,8 @@ import { Viewport } from "pixi-viewport";
 import { BitmapText, Container, LINE_CAP, LINE_JOIN, Rectangle } from "pixi.js";
 import { BG_COLOR } from "../Colors";
 import { Fonts } from "../generated/FontBundle";
+import { Singleton } from "../Global";
 import { getTechTree, isAgeUnlocked, unlockableTechs } from "../logic/TechLogic";
-import { routeTo } from "../Route";
 import { TechPage } from "../ui/TechPage";
 import { forEach } from "../utilities/Helper";
 import { Scene } from "../utilities/SceneManager";
@@ -162,7 +162,7 @@ export class TechTreeScene extends Scene {
       }
       const techTree = getTechTree(this.context.gameState);
       this._selectedTech = tech;
-      routeTo(TechPage, { id: tech });
+      Singleton().routeTo(TechPage, { id: tech });
       this._selectedGraphics.lineStyle(LINE_STYLE);
       let targets = [tech];
       const drawnBoxes: Partial<Record<string, true>> = {};

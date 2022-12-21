@@ -1,12 +1,12 @@
+import react from "@vitejs/plugin-react-swc";
 import { defineConfig } from "vite";
 import Spritesmith from "vite-plugin-spritesmith";
-import { swcReactRefresh } from "vite-plugin-swc-react-refresh";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => {
    return {
       plugins: [
-         swcReactRefresh(),
+         react(),
          Spritesmith({
             watch: command === "serve",
             src: {

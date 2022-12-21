@@ -1,9 +1,9 @@
 import { Viewport } from "pixi-viewport";
 import { InteractionEvent, Sprite } from "pixi.js";
 import { ROMAN_MAP_BG_COLOR } from "../Colors";
+import { Unlockable } from "../definitions/CityDefinitions";
 import { IProvinceVisual, RomeProvince } from "../definitions/RomeProvinceDefinitions";
-import { Config } from "../logic/Constants";
-import { routeTo } from "../Route";
+import { Singleton } from "../Global";
 import { TechPage } from "../ui/TechPage";
 import { forEach } from "../utilities/Helper";
 import { Scene } from "../utilities/SceneManager";
@@ -64,7 +64,7 @@ export class RomeProvinceScene extends Scene {
             if (s.isClicked(e) && this._selectedProvince === null) {
                this._selectedProvince = s;
                s.outline = true;
-               routeTo(TechPage, { id: s.province, type: "RomeProvince" as const });
+               Singleton().routeTo(TechPage, { id: s.province, type: "RomeProvince" as const });
             } else {
                s.outline = false;
             }
@@ -72,7 +72,7 @@ export class RomeProvinceScene extends Scene {
       });
 
       ProvinceVisual.i = 0;
-      forEach(Config.RomeProvince, (name) => {
+      forEach(Unlockable.RomeProvince.definitions, (name) => {
          const province = new ProvinceVisual(name, textures[`Rome${name}`], app.renderer.plugins);
          if (gameState.unlocked[name]) {
             province.annex();
@@ -90,7 +90,7 @@ export class RomeProvinceScene extends Scene {
          if (s.province === id && this._selectedProvince === null) {
             this._selectedProvince = s;
             s.outline = true;
-            routeTo(TechPage, { id: s.province, type: "RomeProvince" as const });
+            Singleton().routeTo(TechPage, { id: s.province, type: "RomeProvince" as const });
          } else {
             s.outline = false;
          }

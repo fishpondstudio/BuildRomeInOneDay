@@ -12,6 +12,7 @@ export interface ISingleton {
    sceneManager: SceneManager;
    grid: Grid;
    buildings: SpecialBuildings;
+   routeTo: <P extends Record<string, unknown>>(component: React.ComponentType<P>, params: P) => void;
 }
 
 export interface SpecialBuildings {

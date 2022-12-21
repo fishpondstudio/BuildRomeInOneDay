@@ -1,4 +1,8 @@
+import { Unlockable } from "../definitions/CityDefinitions";
+import { RomeProvince } from "../definitions/RomeProvinceDefinitions";
 import { Singleton } from "../Global";
+import { RomeProvinceScene } from "../scenes/RomeProvinceScene";
+import { TechTreeScene } from "../scenes/TechTreeScene";
 import { WorldScene } from "../scenes/WorldScene";
 import { pointToXy, safePush, xyToPoint } from "../utilities/Helper";
 import { L, t } from "../utilities/i18n";
@@ -67,5 +71,16 @@ export function onBuildingProductionComplete(xy: string, gs: GameState) {
             source: t(L.Colosseum),
          });
       });
+   }
+}
+
+export function onUnlockableUnlocked(id: string, type: keyof typeof Unlockable | undefined, gs: GameState) {
+   if (!type) {
+      Singleton().sceneManager.getCurrent(TechTreeScene)?.renderTechTree("animate");
+   }
+   if (type === "RomeProvince") {
+      Singleton()
+         .sceneManager.loadScene(RomeProvinceScene, true)
+         .selectProvince(id as RomeProvince);
    }
 }

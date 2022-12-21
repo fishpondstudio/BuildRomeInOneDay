@@ -1,39 +1,55 @@
 import { Unlockable } from "../definitions/CityDefinitions";
-import { IUnlockableGroup } from "../definitions/ITechDefinition";
+import { Resource } from "../definitions/ResourceDefinitions";
 import { IRomeHistoryDefinitions } from "../definitions/RomeHistoryDefinitions";
-import { Singleton, useGameState } from "../Global";
+import { PartialTabulate } from "../definitions/TypeDefinitions";
+import { notifyGameStateUpdate, Singleton, useGameState } from "../Global";
 import { Config } from "../logic/Constants";
-import { getTechTree, getUnlockCost, unlockTech } from "../logic/TechLogic";
+import { onUnlockableUnlocked } from "../logic/LogicCallback";
+import { getResourceAmount, trySpendResources } from "../logic/ResourceLogic";
+import { getTechTree } from "../logic/TechLogic";
 import { RomeProvinceScene } from "../scenes/RomeProvinceScene";
 import { TechTreeScene } from "../scenes/TechTreeScene";
+import { forEach, jsxMapOf, reduceOf } from "../utilities/Helper";
 import { L, t } from "../utilities/i18n";
+import { FormatNumber } from "./HelperComponents";
 import { MenuComponent } from "./MenuComponent";
-import { TechPrerequisiteItemComponent, TechResearchProgressComponent } from "./TechComponent";
+import { ProgressBarComponent } from "./ProgressBarComponent";
+import { TechPrerequisiteItemComponent } from "./TechComponent";
 import { UnlockableEffectComponent } from "./UnlockableEffectComponent";
 
 export function TechPage({ id, type }: { id: string; type?: keyof typeof Unlockable }) {
    const gs = useGameState();
-   const config: IUnlockableGroup = type ? Unlockable[type] : getTechTree(gs);
-   const tech = config.definitions[id];
-   const prerequisitesSatisfied = tech.require.every((t) => gs.unlocked[t]);
+   const config = type ? Unlockable[type] : getTechTree(gs);
+   const tech = id as keyof typeof config.definitions;
+   const definition = config.definitions[tech];
+   const prerequisitesSatisfied = definition.require.every((t) => gs.unlocked[t]);
+   const unlockCost = config.unlockCost(tech);
+   const availableResources: PartialTabulate<Resource> = {};
+   forEach(unlockCost, (k, v) => {
+      availableResources[k] = getResourceAmount(k, gs);
+   });
+   const progress =
+      reduceOf(availableResources, (prev, k, v) => prev + Math.min(v, unlockCost[k] ?? 0), 0) /
+      reduceOf(unlockCost, (prev, _, v) => prev + v, 0);
    return (
       <div className="window">
          <div className="title-bar">
             <div className="title-bar-text">
-               {config.verb()}: {tech.name()}
+               {config.verb()}: {definition.name()}
             </div>
          </div>
          <MenuComponent />
          <div className="window-body">
             <fieldset>
                <legend>{t(L.TechnologyPrerequisite)}</legend>
-               {tech.require.map((prerequisite) => {
+               {definition.require.map((prerequisite) => {
                   return (
                      <TechPrerequisiteItemComponent
                         key={prerequisite}
                         name={
                            <>
-                              {config.verb()} <b>{config.definitions[prerequisite].name()}</b>
+                              {config.verb()}{" "}
+                              <b>{config.definitions[prerequisite as keyof typeof config.definitions].name()}</b>
                            </>
                         }
                         unlocked={!!gs.unlocked[prerequisite]}
@@ -43,13 +59,13 @@ export function TechPage({ id, type }: { id: string; type?: keyof typeof Unlocka
                      />
                   );
                })}
-               {(tech as IRomeHistoryDefinitions).requireProvince?.map((province) => {
+               {(definition as IRomeHistoryDefinitions).requireProvince?.map((province) => {
                   return (
                      <TechPrerequisiteItemComponent
                         key={province}
                         name={
                            <>
-                              {t(L.Annex)} <b>{Config.RomeProvince[province].name()}</b>
+                              {t(L.Annex)} <b>{Unlockable.RomeProvince.definitions[province].name()}</b>
                            </>
                         }
                         unlocked={!!gs.unlocked[province]}
@@ -57,22 +73,61 @@ export function TechPage({ id, type }: { id: string; type?: keyof typeof Unlocka
                      />
                   );
                })}
-               {tech.require.length === 0 ? <div>{t(L.TechnologyNoPrerequisite)}</div> : null}
+               {definition.require.length === 0 ? <div>{t(L.TechnologyNoPrerequisite)}</div> : null}
             </fieldset>
-            <TechResearchProgressComponent
-               name={tech.name()}
-               unlocked={!!gs.unlocked[id]}
-               prerequisite={prerequisitesSatisfied}
-               resource="Science"
-               unlockLabel={t(L.UnlockBuilding)}
-               unlockCost={getUnlockCost(tech)}
-               onUnlocked={() => {
-                  unlockTech(id, gs);
-                  Singleton().sceneManager.getCurrent(TechTreeScene)?.renderTechTree("animate");
-               }}
-               gameState={gs}
-            />
-            <UnlockableEffectComponent definition={tech} gameState={gs} />
+            <fieldset>
+               <legend>{t(L.Progress)}</legend>
+               {gs.unlocked[tech] ? (
+                  <div className="row text-green">
+                     <div className="m-icon small mr5">check_circle</div>
+                     <div>{t(L.TechHasBeenUnlocked, { tech: definition.name() })}</div>
+                  </div>
+               ) : (
+                  <>
+                     {jsxMapOf(unlockCost, (res, cost) => {
+                        const availableAmount = availableResources[res] ?? 0;
+                        return (
+                           <div className="row mv5" key={res}>
+                              {availableAmount >= cost ? (
+                                 <div className="m-icon small text-green mr5">check_circle</div>
+                              ) : (
+                                 <div className="m-icon small text-red mr5">cancel</div>
+                              )}
+                              <div className="mr5">{Config.Resource[res].name()}: </div>
+                              <div className="f1" />
+                              <div className="ml5">
+                                 <FormatNumber value={availableAmount} /> /{" "}
+                                 <strong>
+                                    <FormatNumber value={cost} />
+                                 </strong>
+                              </div>
+                           </div>
+                        );
+                     })}
+                     <div className="sep5" />
+                     <div className="row">
+                        <div className="f1">
+                           <ProgressBarComponent progress={progress} />
+                        </div>
+                        <div style={{ width: "10px" }} />
+                        <button
+                           disabled={!prerequisitesSatisfied || progress < 1}
+                           onClick={() => {
+                              if (!trySpendResources(unlockCost, gs)) {
+                                 return;
+                              }
+                              gs.unlocked[tech] = true;
+                              notifyGameStateUpdate();
+                              onUnlockableUnlocked(tech, type, gs);
+                           }}
+                        >
+                           {t(L.UnlockBuilding)}
+                        </button>
+                     </div>
+                  </>
+               )}
+            </fieldset>
+            <UnlockableEffectComponent definition={definition} gameState={gs} />
          </div>
       </div>
    );

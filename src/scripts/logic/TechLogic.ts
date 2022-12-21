@@ -46,12 +46,12 @@ export function isAgeUnlocked(age: string, gs: GameState): boolean {
    if (!tech) {
       return false;
    }
-   return techTree.definitions[tech].column >= techTree.ages[age].from;
+   return techTree.definitions[tech as keyof typeof techTree.definitions].column >= techTree.ages[age].from;
 }
 
 export function getAgeForTech(tech: string, gs: GameState): string | null {
    const techTree = getTechTree(gs);
-   const techColumn = techTree.definitions[tech].column;
+   const techColumn = techTree.definitions[tech as keyof typeof techTree.definitions].column;
    let age: string;
    for (age in techTree.ages) {
       const ageDef = techTree.ages[age];

@@ -31,11 +31,11 @@ function makeTextAutoSize(text: string, size: number, tint: number, maxWidth: nu
 
 export function greatPersonSprite(greatPerson: GreatPerson, context: ISceneContext): Sprite {
    const { textures } = context;
-   const { age, time, name } = Config.GreatPerson[greatPerson];
+   const { time, name } = Config.GreatPerson[greatPerson];
 
    const bg = new Sprite(textures.GreatPersonBackground);
 
-   const ageText = bg.addChild(makeText(Config.TechAge[age].name().toUpperCase(), 30, 0x34495e));
+   const ageText = bg.addChild(makeText("Placeholder", 30, 0x34495e));
    ageText.anchor.set(0.5, 0.5);
    ageText.alpha = 0.8;
    ageText.position.set(bg.width / 2, 40);

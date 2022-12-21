@@ -1,6 +1,7 @@
 import { GlobalMultipliers, IModifier, Multiplier } from "../logic/TickLogic";
 import { Building } from "./BuildingDefinitions";
-import { Deposit } from "./ResourceDefinitions";
+import { Deposit, Resource } from "./ResourceDefinitions";
+import { PartialTabulate } from "./TypeDefinitions";
 
 export interface IUnlockableDefinition {
    name: () => string;
@@ -23,12 +24,12 @@ export interface ITechAgeDefinition {
    name: () => string;
 }
 
-export interface IUnlockableGroup {
-   definitions: Record<string, IUnlockableDefinition>;
+export interface IUnlockableGroup<T extends Record<string, IUnlockableDefinition>> {
+   definitions: T;
+   unlockCost: (key: keyof T) => PartialTabulate<Resource>;
    verb: () => string;
 }
 
-export interface ITechTree extends IUnlockableGroup {
-   definitions: Record<string, ITechDefinition>;
+export interface ITechTree extends IUnlockableGroup<Record<string, ITechDefinition>> {
    ages: Record<string, ITechAgeDefinition>;
 }

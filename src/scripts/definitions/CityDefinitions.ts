@@ -41,20 +41,32 @@ export class CityDefinitions {
    };
 }
 
+const RomeHistory = Object.freeze(new RomeHistoryDefinitions());
+
 export const TechTree = {
    Rome: {
-      definitions: Object.freeze(new RomeHistoryDefinitions()),
+      definitions: RomeHistory,
       ages: Object.freeze(new RomeHistoryStageDefinitions()),
       verb: () => t(L.Research),
+      unlockCost: (k: keyof RomeHistoryDefinitions) => {
+         const def = RomeHistory[k];
+         return { Science: Math.pow(2, def.column) * 5000 };
+      },
    } as ITechTree,
-} as const satisfies Record<string, ITechTree>;
+} as const;
+
+const RomeProvince = Object.freeze(new RomeProvinceDefinitions());
 
 export const Unlockable = {
    RomeProvince: {
-      definitions: Object.freeze(new RomeProvinceDefinitions()),
+      definitions: RomeProvince,
       verb: () => t(L.Annex),
-   } as IUnlockableGroup,
-} as const satisfies Record<string, IUnlockableGroup>;
+      unlockCost: (k: keyof RomeProvinceDefinitions) => {
+         const def = RomeProvince[k];
+         return { Legion: def.unlockCost };
+      },
+   } as IUnlockableGroup<typeof RomeProvince>,
+} as const;
 
 export type City = keyof CityDefinitions;
 

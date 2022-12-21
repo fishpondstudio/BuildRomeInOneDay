@@ -1,15 +1,14 @@
-import { useGameState } from "../Global";
+import { Singleton, useGameState } from "../Global";
 import { GameState } from "../logic/GameState";
 import { Tick } from "../logic/TickLogic";
 import { ITileData } from "../logic/Tile";
-import { routeTo } from "../Route";
 import { BuildingBodyOverride, DefaultBuildingBody } from "./BuildingBody";
 import { LoadingPage } from "./LoadingPage";
 import { MenuComponent } from "./MenuComponent";
 
 export function BuildingPage({ tile }: { tile: ITileData }): JSX.Element | null {
    if (tile.building == null) {
-      routeTo(LoadingPage, {});
+      Singleton().routeTo(LoadingPage, {});
       return null;
    }
    const building = tile.building;
