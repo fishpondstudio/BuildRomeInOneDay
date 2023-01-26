@@ -13,6 +13,7 @@ import { MenuComponent } from "./MenuComponent";
 export function EmptyTilePage({ tile }: { tile: ITileData }): JSX.Element {
    const gs = useGameState();
    const [, setSelected] = useState<Building | null>(null);
+   const [filter, setFilter] = useState<string>("");
    const constructed = getBuildingsByType(gs);
    return (
       <div className="window" onPointerDown={() => setSelected(null)}>
@@ -40,7 +41,12 @@ export function EmptyTilePage({ tile }: { tile: ITileData }): JSX.Element {
             </fieldset>
             <fieldset>
                <legend>{t(L.BuildingANew)}</legend>
-               <input type="text" style={{ width: "100%" }} placeholder={t(L.BuildingSearchText)} />
+               <input
+                  type="text"
+                  style={{ width: "100%" }}
+                  placeholder={t(L.BuildingSearchText)}
+                  onChange={(e) => setFilter(e.target.value)}
+               />
             </fieldset>
             <div className="table-view">
                <table>
@@ -54,6 +60,7 @@ export function EmptyTilePage({ tile }: { tile: ITileData }): JSX.Element {
                   <tbody>
                      {keysOf(unlockedBuildings(gs))
                         .sort((a, b) => (Config.BuildingTier[a] ?? 0) - (Config.BuildingTier[b] ?? 0))
+                        .filter((v) => Config.Building[v].name().toLowerCase().includes(filter.toLowerCase()))
                         .map((k) => {
                            if ((constructed[k]?.length ?? 0) >= (Tick.current.buildings[k].max ?? Infinity)) {
                               return null;

@@ -90,15 +90,20 @@ export function calculateTierAndPrice(gs: GameState) {
       });
    });
 
+   const resourceTierDependency: Partial<Record<Resource, Resource>> = {};
+   const buildingTierDependency: Partial<Record<Building, Resource>> = {};
+
    while (sizeOf(Config.BuildingTier) < sizeOf(Config.Building)) {
       allRecipes.forEach(({ building, input, output }) => {
          let maxInputResourceTier = 0;
          let inputResourcesValue = 0;
+         let maxInputResource: Resource | null = null;
          const allInputResourcesHasTier = keysOf(input).every((r) => {
             const tier = Config.ResourceTier[r];
             const price = Config.ResourcePrice[r];
             if (tier && tier > maxInputResourceTier) {
                maxInputResourceTier = tier;
+               maxInputResource = r;
             }
             if (price) {
                inputResourcesValue += price * (input[r] ?? 0);
@@ -106,15 +111,35 @@ export function calculateTierAndPrice(gs: GameState) {
             return tier && price;
          });
          if (allInputResourcesHasTier) {
+            const targetTier = maxInputResourceTier + 1;
             let allOutputAmount = 0;
             forEach(output, (res, amount) => {
-               if (!Config.ResourceTier[res || maxInputResourceTier + 1 > Config.ResourceTier[res]!]) {
-                  Config.ResourceTier[res] = maxInputResourceTier + 1;
+               if (!Config.ResourceTier[res] || targetTier < Config.ResourceTier[res]!) {
+                  Config.ResourceTier[res] = targetTier;
+                  console.log(`${res} = ${targetTier}`);
+                  if (maxInputResource) {
+                     resourceTierDependency[res] = maxInputResource;
+                  }
+                  forEach(resourceTierDependency, (k, v) => {
+                     if (v === res) {
+                        delete resourceTierDependency[k];
+                        delete Config.ResourceTier[k];
+                        console.log(`Resource Tier of ${k} is decided by ${res}, but its tier has changed.`);
+                     }
+                  });
+                  forEach(buildingTierDependency, (k, v) => {
+                     if (v === res) {
+                        delete buildingTierDependency[k];
+                        delete Config.BuildingTier[k];
+                        console.log(`Building Tier of ${k} is decided by ${res}, but its tier has changed.`);
+                     }
+                  });
                }
-               Config.ResourceTier[res] = maxInputResourceTier + 1;
                allOutputAmount += amount;
             });
-            Config.BuildingTier[building] = maxInputResourceTier + 1;
+            if (!Config.BuildingTier[building] || targetTier > Config.BuildingTier[building]!) {
+               Config.BuildingTier[building] = targetTier;
+            }
             forEach(output, (res) => {
                const price = (2 * inputResourcesValue) / allOutputAmount;
                if (!Config.ResourcePrice[res] || price > Config.ResourcePrice[res]!) {

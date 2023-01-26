@@ -257,7 +257,7 @@ export class RomeHistoryDefinitions {
    MithridaticWar: IRomeHistoryDefinitions = {
       name: () => t(L.MithridaticWar),
       column: 9,
-      requireProvince: ["Bithynia", "Pontus", "Cilicia", "Syria", "Creta"],
+      requireProvince: ["Asia", "Bithynia", "Creta"],
       buildingMultiplier: {
          Brewery: { output: 1, storage: 1 },
          Domus: { output: 1, storage: 1 },
@@ -267,7 +267,7 @@ export class RomeHistoryDefinitions {
    CaesarsCivilWar: IRomeHistoryDefinitions = {
       name: () => t(L.CaesarsCivilWar),
       column: 9,
-      requireProvince: ["Numidia"],
+      requireProvince: ["Numidia", "Syria"],
       buildingMultiplier: {
          IronForge: { input: 1, output: 1 },
          Armory: { input: 1, output: 1 },
